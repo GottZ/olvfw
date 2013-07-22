@@ -2,7 +2,6 @@
 
 INCLUDE= ./include
 CHIBIOS= $(INCLUDE)/chibios
-GCC_ARM= $(INCLUDE)/gcc-arm-none-eabi-4_7-2012q4
 
 BSP= $(INCLUDE)/liveview
 
@@ -83,7 +82,7 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
 MCU  = cortex-m3
 
 #TRGT = arm-elf-
-TRGT = $(GCC_ARM)/bin/arm-none-eabi-
+TRGT = arm-none-eabi-
 CC   = $(TRGT)gcc
 CPPC = $(TRGT)g++
 LD   = $(TRGT)gcc
