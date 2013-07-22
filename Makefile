@@ -127,9 +127,9 @@ orig:
 	sudo dfu-util -d 0fce:f0fa -c 1 -i 0 -a 0 -s 0x08003000 -v -D ./original/firmware.bin
 
 dump:
+	mkdir ./original/
 	sudo dfu-util -d 0fce:f0fa -c 1 -i 0 -a 0 -s 0x08000000 -v -U ./original/boot.bin
 	sudo dfu-util -d 0fce:f0fa -c 1 -i 0 -a 0 -s 0x08003000 -v -U ./original/firmware.bin
 
 term:
 	sudo minicom -D /dev/ttyACM3
-
