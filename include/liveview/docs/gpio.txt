@@ -1,0 +1,78 @@
+Timer3 Partial remap (CH1/PB4, CH2/PB5, CH3/PB0, CH4/PB1);
+Enabled: PWR, BKP, AFIO, IOPA, IOPB, IOPC, IOPD, ADC1, TIM1, SPI1, TIM3, TIM5, SPI2, I2C1;
+External IRQ: +PC1, +PC6, +PB8, +PC13;
+
+Port A:
+  Pin 00: (DI);
++ Pin 01: (APPO50)	red led #enable (PWM on TIM5/CH2);
+  Pin 02: (DI);
+  Pin 03: (DI);
++ Pin 04: (PPO50);	SPI1_NSS;
++ Pin 05: (APPO50)	SPI1_SCK;
++ Pin 06: (APPO50)	SPI1_MISO;
++ Pin 07: (APPO50)	SPI1_MOSI;
+  Pin 08: (DI);
+  Pin 09: (APPO50);	blue led #enable (PWM on TIM1/CH2);
++ Pin 10: (PPO50)	usb #enabled;
++ Pin 11: (DI)		usb dm;
++ Pin 12: (DI)		usb dp;
+? Pin 13: (PDI);
+? Pin 14: (PDI);
+? Pin 15: (PDI);
+
+Port B:
++ Pin 00: (PPO50)	OLED +12V enable;
+  Pin 01: (DI);
+? Pin 02: (PPO50);
+  Pin 03: (DI);
+? Pin 04: (PDI);
++ Pin 05: (APPO50)	green led #enable (PWM on TIM3/CH2);
++ Pin 06: (AODO50)	I2C1 SCL;
++ Pin 07: (AODO50)	I2C1 SDA;
++ Pin 08: (DI)		EXTI8;
+  Pin 09: (DI);
+  Pin 10: (DI);
+  Pin 11: (DI);
+? Pin 12: (PPO50);
++ Pin 13: (APPO50)	SPI2 SCK;
++ Pin 14: (APPO50)	SPI2 MISO;
++ Pin 15: (APPO50)	SPI2 MOSI;
+
+spi1 exchange set/reset PC10 inside PA04 set/reset
+
+Port C:
++ Pin 00: (PPO50)	vibrator enable;
++ Pin 01: (PDI)		battery charge #enabled EXTI1;
+? Pin 02: (PPO50);
+  Pin 03: (DI);
+? Pin 04: (PPO50)	rise EXTI8;
+  Pin 05: (AI)		unknown analog input;
++ Pin 06: (PDI);	usb #connected (EXTI6);
+  Pin 07: (DI);
+  Pin 08: (DI);
+? Pin 09: (PPO50);
++ Pin 10: (PPO50);	SPI1 OLED #C/D;
+  Pin 11: (DI);
+? Pin 12: (PPO50);
++ Pin 13: (DI) 		i2c ext gpio EXTI13;
+  Pin 14: (AI)		unknown analog input;
+  Pin 15: (DI);
+
+Port D:
+  Pin 00: (DI);
+  Pin 01: (DI);
++?Pin 02: (PPO50)	system 0 off/1 on;
+  Pin 03: (DI);
+  Pin 04: (DI);
+  Pin 05: (DI);
+  Pin 06: (DI);
+  Pin 07: (DI);
+  Pin 08: (DI);
+  Pin 09: (DI);
+  Pin 10: (DI);
+  Pin 11: (DI);
+  Pin 12: (DI);
+  Pin 13: (DI);
+  Pin 14: (DI);
+  Pin 15: (DI);
+

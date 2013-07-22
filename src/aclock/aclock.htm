@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>LiveView Analog Clock Image Creat0r</title>
+<!--<script type="text/javascript" src="./jquery-1.8.3.min.js"></script>-->
+<script type="text/javascript">
+window.onload = function(){
+	var canvas = document.createElement("canvas");
+	var ctx = canvas.getContext("2d");
+	canvas.width = "128";
+	canvas.height = "128";
+	//canvas.style.width = "384px"; canvas.style.height = "384px";
+	canvas.style.width = "128px"; canvas.style.height = "128px";
+	canvas.style.backgroundColor = "#000";
+	document.body.appendChild(canvas);
+	
+	var text = document.createElement("textarea");
+	document.body.appendChild(text);
+	
+	var background = function () {
+		ctx.save();
+		ctx.beginPath();
+		
+		//ctx.arc(64, 64, 48, 0, Math.PI *2, false);
+		var radius = 58;
+		for (var i = 0; i <= 256; i++) {
+			var s = i /256;
+			var x = Math.sin(Math.PI*2 *s) *radius +64.5;
+			var y = Math.cos(Math.PI*2 *s) *radius +64.5;
+			if (i == 0) {
+				ctx.moveTo(x, y);
+				continue;
+			}
+			ctx.lineTo(x, y);
+		}
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = "rgb(255,255,255)";
+		ctx.stroke();
+		
+		ctx.beginPath();
+		
+		var h_rad = 51;
+		var i_rad = 53;
+		var o_rad = 56.5;
+		for (var i = 0; i < 60; i++) {
+			var s = i / 60;
+			
+			if (i % 5 == 0) {
+				var x1 = Math.sin(Math.PI*2 *s) *h_rad +64.5;
+				var y1 = Math.cos(Math.PI*2 *s) *h_rad +64.5;
+			} else {
+				var x1 = Math.sin(Math.PI*2 *s) *i_rad +64.5;
+				var y1 = Math.cos(Math.PI*2 *s) *i_rad +64.5;
+			}
+			
+			var x2 = Math.sin(Math.PI*2 *s) *o_rad +64.5;
+			var y2 = Math.cos(Math.PI*2 *s) *o_rad +64.5;
+			
+			ctx.moveTo(x1, y1);
+			ctx.lineTo(x2, y2);
+		}
+		
+		ctx.lineWidth = 1.4;
+		ctx.strokeStyle = "rgb(255,255,255)";
+		ctx.stroke();
+		ctx.restore();
+	};
+	
+	var hour = function (h/*, m*/) {
+		ctx.save();
+		ctx.beginPath();
+		
+		var t_rad = 42;
+		var b_rad = -5;
+		//var s = (h %12) /12 + ((m %60) /12 |0) /60;
+		var s = (h %60) /60;
+		
+		var x1 = Math.sin(Math.PI*2 *s) *b_rad +64.5;
+		var y1 = Math.cos(Math.PI*2 *s)*-1 *b_rad +64.5;
+		
+		var x2 = Math.sin(Math.PI*2 *s) *t_rad +64.5;
+		var y2 = Math.cos(Math.PI*2 *s)*-1 *t_rad +64.5;
+		
+		ctx.moveTo(x1, y1);
+		ctx.lineTo(x2, y2);
+		
+		ctx.lineWidth = 4;
+		ctx.strokeStyle = "rgb(255,255,255)";
+		ctx.stroke();
+		
+		ctx.restore();
+	}
+	
+	var minute = function (m) {
+		ctx.save();
+		ctx.beginPath();
+		
+		var t_rad = 50;
+		var b_rad = -8;
+		var s = (m %60) /60;
+		
+		var x1 = Math.sin(Math.PI*2 *s) *b_rad +64.5;
+		var y1 = Math.cos(Math.PI*2 *s)*-1 *b_rad +64.5;
+		
+		var x2 = Math.sin(Math.PI*2 *s) *t_rad +64.5;
+		var y2 = Math.cos(Math.PI*2 *s)*-1 *t_rad +64.5;
+		
+		ctx.moveTo(x1, y1);
+		ctx.lineTo(x2, y2);
+		
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = "rgb(255,255,255)";
+		ctx.stroke();
+		
+		ctx.restore();
+	}
+	
+	/*var i = 0;
+	setInterval(function(){
+		ctx.clearRect(0,0,128,128);
+		background();
+		hour(i / 12 | 0);
+		minute(i);
+		i++;
+	}, 100);*/
+	
+	//background();
+	var pics = [];
+	for (var i = 0; i < 17; i++) {
+		ctx.clearRect(0,0,128,128);
+		if (i < 8) hour((i%8)+15);
+		else if (i < 16) minute((i%8)+15);
+		else {
+			background();
+			ctx.clearRect(0,0,64,128);
+			for (var i2 = 0; i2 < 64; i2++) {
+				ctx.clearRect(127 -i2, i2 +2, 64 +i2, 128);
+			}
+		}
+		
+		var img = ctx.getImageData(0,0,128,128);
+		
+		var alpha = [];
+		for (var i2 = 0; i2 < 128 * 128; i2++) {
+			alpha.push((img.data[i2*4+3] >> 3) & 0x1f); // bit drop 8 > 5
+		}
+		
+		img = alpha;
+		delete alpha;
+		
+		var info = [];
+		var imgd = [];
+		
+		var info_start = -1;
+		
+		for (var iy = 0; iy < 128; iy++) {
+			var startx = -1;
+			var endx = -1;
+			for (var ix = 0; ix < 128; ix++) {
+				if (img[iy*128+ix] > 0) {
+					if (startx == -1) startx = ix;
+					endx = ix;
+				}
+			}
+			if (startx != -1) {
+				for (var ix = startx; ix <= endx; ix++) {
+					imgd.push(img[iy*128+ix]);
+				}
+				//info.push([iy, startx, endx]);
+				if (info_start == -1) info_start = iy;
+				info.push(startx);
+				info.push(endx);
+			}
+		}
+		
+		var infon = [];
+		infon.push(info.length / 2);
+		infon.push(info_start);
+		
+		var min = 128;
+		
+		for (var i2 = 0; i2 < info.length; i2++) {
+			if (info[i2] < min) min = info[i2];
+		}
+		
+		infon.push(min);
+		
+		var i3 = 0;
+		
+		for (var i2 = 0; i2 < info.length; i2++) {
+			/*var next = i2 < info.length ? info[i2+1] : 0;
+			infon.push((info[i2] << ((i2%7)+1) | next >> (6-(i2%7))) & 0xff);
+			if (i2%7 == 6) i2++;*/
+			var first = info[i2] -min;
+			var second = i2 < info.length ? (info[i2+1] -min) : 0;
+			var push = (i3 % 3) *2 +2;
+			infon.push((first << push | second >> (6 - push)) & 0xff);
+			if (i3 % 3 == 2) i2++;
+			i3++;
+		}
+		
+		var imgn = [];
+		
+		var i3 = 0;
+		
+		for (var i2 = 0; i2 < imgd.length; i2++) {
+			var first = imgd[i2];
+			var second = i2 < imgd.length ? imgd[i2+1] : 0;
+			
+			var push = ((i3 %5) /2 |0);
+			if ((i3%5)%2 != 1) {
+				imgn.push((first << (push +3) | second >> (2 -push)) &0xff);
+				if (push == 2) i2++;
+			} else {
+				var third = i2 < imgd.length -1 ? imgd[i2+2] : 0;
+				imgn.push((first << (push +6) | second << (push +1) | third >> (4 -push)) &0xff);
+				i2++;
+			}
+			i3++;
+		}
+		
+		pics.push([info, infon, imgd, imgn]);
+	}
+	console.dir(pics);
+	
+	var ifo = [0, 0, 0, 0];
+	for (var i = 0; i < 4; i++) {
+		for (var i2 = 0; i2 < pics.length; i2++) {
+			ifo[i] += pics[i2][i].length;
+		}
+	}
+	console.dir(ifo);
+	console.log("info compression: " + (ifo[1]/ifo[0]*100).toFixed(2) + "%");
+	console.log("picture compression: " + (ifo[3]/ifo[2]*100).toFixed(2) + "%");
+	
+	var txt = "";
+	
+	var ifo = [[],[],[]];
+	for (var i = 0; i < pics.length; i++) {
+		ifo[0].push("0x"+pics[i][1][0].toString(16).toUpperCase());
+		ifo[1].push("0x"+pics[i][1][1].toString(16).toUpperCase());
+		ifo[2].push("0x"+pics[i][1][2].toString(16).toUpperCase());
+	}
+	txt += "static unsigned char aclock_info_lines["+pics.length+"] = {\n\t" + ifo[0].join(",") + "\n};\n";
+	txt += "static unsigned char aclock_info_starty["+pics.length+"] = {\n\t" + ifo[1].join(",") + "\n};\n";
+	txt += "static unsigned char aclock_info_offset["+pics.length+"] = {\n\t" + ifo[2].join(",") + "\n};\n\n";
+	
+	
+	for (var i = 0; i < pics.length; i++) {
+		txt += "static unsigned char aclock_info_" + i + "[" + (pics[i][1].length -3) + "] = {\n\t";
+		var arr = [];
+		for (var i2 = 3; i2 < pics[i][1].length; i2++) {
+			arr.push("0x" + pics[i][1][i2].toString(16).toUpperCase());
+		}
+		txt += arr.join(",") + "\n};\n";
+		txt += "static unsigned char aclock_data_" + i + "[" + pics[i][3].length + "] = {\n\t";
+		arr = [];
+		for (var i2 = 0; i2 < pics[i][3].length; i2++) {
+			arr.push("0x" + pics[i][3][i2].toString(16).toUpperCase());
+		}
+		txt += arr.join(",") + "\n};\n\n";
+	}
+	
+	var arr = [[],[]];
+	
+	for (var i = 0; i < pics.length; i++) {
+		arr[0].push("aclock_info_" + i);
+		arr[1].push("aclock_data_" + i);
+	}
+	txt += "static unsigned char* aclock_info["+pics.length+"] = {\n\t" + arr[0].join(",") + "\n};\n";
+	txt += "static unsigned char* aclock_data["+pics.length+"] = {\n\t" + arr[1].join(",") + "\n};\n";
+	
+	text.value = txt;
+	
+	ctx.clearRect(0,0,128,128);
+	background();
+	
+	
+	hour((2 *60 +24) /12 |0);
+	minute(24);
+};
+
+/*
+
+info:
+1 byte info length
+1 byte info y start
+1 byte minimal offset
+
+info array:
+6 bit start, end
+...
+
+img:
+5 bit pixel
+...
+
+*/
+</script>
+</head>
+<body>
+</body>
+</html>

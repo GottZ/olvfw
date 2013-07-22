@@ -1,0 +1,4 @@
+RGB OLED matrix
+
+R[11-15] G[5-10] B[0-4]
+
