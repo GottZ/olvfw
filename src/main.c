@@ -74,8 +74,8 @@ static unsigned long olv_debug_info (void);
 // efficiency will come when i have time to clean this up.
 
 // first: unsigned char "enabled". this is to detect if the loop should or should not ignore it.
-// third: unsigned long "ttn". this shows a timestamp pointing to the next execution time.
-// fourth: "func". this is a pointer to the actual method.
+// second: unsigned long "ttn". this shows a timestamp pointing to the next execution time.
+// third: "func". this is a pointer to the actual method.
 static olv_event_pool olv_event[] = {
   {1, 0, olv_button},
   {1, 0, olv_menu},
